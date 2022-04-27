@@ -60,7 +60,9 @@ myDB(async client => {
   };
 
   app.route('/profile').get(ensureAuthenticated, (req, res) => {
-    res.render(process.cwd() + '/views/profile.pug');
+    res.render(process.cwd() + '/views/profile.pug', 
+      {username: req.user.username}
+    );
   });
 
 
