@@ -66,11 +66,19 @@ myDB(async client => {
   // listening for connections
   io.on('connection', socket => {
     console.log('A user has connected');
+
     ++currentUsers;
     io.emit('user', {
       name: socket.request.user.name, 
       currentUsers: currentUsers, 
       connected: true
+    });
+
+    socket.on('chat message', msg => {
+      io.emit('chat message', {
+        name: socket.request.user.name,
+        message: msg
+      });
     });
 
     socket.on('disconnect', () => {
@@ -82,6 +90,8 @@ myDB(async client => {
       });
     });
   });
+
+
 
 }).catch(e => {
   app.route('/').get((req, res) => {
