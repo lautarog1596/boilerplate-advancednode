@@ -67,11 +67,19 @@ myDB(async client => {
   io.on('connection', socket => {
     console.log('A user has connected');
     ++currentUsers;
-    io.emit('user count', currentUsers);
+    io.emit('user', {
+      name: socket.request.user.name, 
+      currentUsers: currentUsers, 
+      connected: true
+    });
 
     socket.on('disconnect', () => {
       --currentUsers;
-      io.emit('user count', currentUsers);
+      io.emit('user', {
+        name: socket.request.user.name, 
+        currentUsers: currentUsers, 
+        connected: false
+      });
     });
   });
 
@@ -80,7 +88,6 @@ myDB(async client => {
     res.render('pug', { title: e, message: 'Unable to login' });
   });
 });
-
 
 
 fccTesting(app); //For FCC testing purposes
