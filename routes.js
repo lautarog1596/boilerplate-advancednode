@@ -24,6 +24,13 @@ module.exports = function (app, myDataBase) {
     res.redirect('/chat');
   });
 
+  app.route('/chat').get(ensureAuthenticated, (req, res) => {
+    console.log('chat');
+    res.render(process.cwd() + '/views/pug/chat.pug', {
+      user: req.user
+    });
+  });
+
   app.route('/register')
   .post((req, res, next) => {
     myDataBase.findOne({ username: req.body.username }, function(err, user) {
@@ -87,10 +94,6 @@ module.exports = function (app, myDataBase) {
       .send('Not Found');
   });
   
-  app.route('/chat').get(ensureAuthenticated, (req, res) => {
-    res.render(process.cwd() + '/views/pug/chat.pug', {
-      user: req.user
-    });
-  });
+  
 
 }

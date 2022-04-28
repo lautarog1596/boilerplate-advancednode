@@ -33,7 +33,7 @@ const routes = require('./routes.js');
 const auth = require('./auth.js');
 
 myDB(async client => {
-  const myDataBase = await client.db('database').collection('users');
+  const myDataBase = client.db('advancednode').collection('users');
 
   routes(app, myDataBase);
   auth(app, myDataBase);

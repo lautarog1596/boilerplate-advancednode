@@ -8,12 +8,15 @@ require('dotenv').config();
 
 module.exports = (app, myDataBase) => {
 
+  // Save user id to a cookie
   passport.serializeUser((user, done) => {
+    console.log('serializeUser', user);
     done(null, user._id);
   });
-  
+
   passport.deserializeUser((id, done) => {
-    myDB.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+    myDataBase.findOne({ _id: new ObjectID(id) }, (err, doc) => {
+      console.log('deserializeUser', doc);
       done(null, doc);
     });
   });
@@ -21,12 +24,13 @@ module.exports = (app, myDataBase) => {
   passport.use(new GitHubStrategy({
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: '/auth/github/callback'
+    callbackURL: 'https://limitless-brook-74504.herokuapp.com/auth/github/callback'
   },
     (accessToken, refreshToken, profile, cb) => {
-      console.log(profile);
+      console.log("profile", profile);
       myDataBase.findOneAndUpdate(
         { id: profile.id },
+        {},
         {
           $setOnInsert: {
             id: profile.id,
